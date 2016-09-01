@@ -50,8 +50,8 @@ def sa_naive(p, t):
             if t[i+j] != p[j]:  # compare characters
                 match = False
                 break
-        if !match: #if a match was not found, try the reverse complement
-            for j in range(len(reverseComplement(p)): #loop over characters in reverse complement
+        if not match: #if a match was not found, try the reverse complement
+            for j in range(len(reverseComplement(p))): #loop over characters in reverse complement
                 if t[i+j] != reverseComplement(p)[j]: # compare characters in the reverse complement
                     match = False
                     break
