@@ -58,3 +58,18 @@ def sa_naive(p, t):
         if match:
             occurrences.append(i)  # all chars matched; record
     return occurrences
+
+def naive_2mm(p, t):
+    occurrences = []
+    for i in range(len(t) - len(p) + 1):  # loop over alignments
+        match = True
+        mismatch = 0
+        for j in range(len(p)):  # loop over characters
+            if t[i+j] != p[j]:  # compare characters
+                mismatch += 1
+                if mismatch > 2:
+                    match = False
+                    break
+        if match:
+            occurrences.append(i)  # all chars matched; record
+    return occurrences
