@@ -44,19 +44,10 @@ def readFastq(filename):
 # implement a version of naive matching that is strand aware
 def sa_naive(p, t):
     occurrences = []
-    for i in range(len(t) - len(p) + 1):  # loop over alignments
-        match = True
-        for j in range(len(p)):  # loop over characters
-            if t[i+j] != p[j]:  # compare characters
-                match = False
-                break
-        if not match: #if a match was not found, try the reverse complement
-            for j in range(len(reverseComplement(p))): #loop over characters in reverse complement
-                if t[i+j] != reverseComplement(p)[j]: # compare characters in the reverse complement
-                    match = False
-                    break
-        if match:
-            occurrences.append(i)  # all chars matched; record
+    if reverseComplement(p) == p:
+        return naive(p, t)
+    occurrences = naive(p, t)
+    occurrences += naive(reverseComplement(p), t)
     return occurrences
 
 def naive_2mm(p, t):
