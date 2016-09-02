@@ -54,7 +54,7 @@ def readFastq(filename):
 
 # implement a version of naive matching that is strand aware
 def sa_naive(p, t):
-    """Return a naive string match that considers the reverse omplement."""
+    """Return a naive string match that considers the reverse complement."""
     occurrences = []
     if reverseComplement(p) == p:  # if the reverse complement is the same,
         return naive(p, t)  # just return the naive match
@@ -71,8 +71,8 @@ def naive_2mm(p, t):
         mismatch = 0
         for j in range(len(p)):  # loop over characters
             if t[i+j] != p[j]:  # compare characters
-                mismatch += 1
-                if mismatch > 2:
+                mismatch += 1  # increment mismatch
+                if mismatch > 2:  # mismatches > 2 makes it a mismatch
                     match = False
                     break
         if match:
