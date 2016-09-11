@@ -30,15 +30,19 @@ def naive_with_counts(p, t):
     and the total number of character comparisons.
     """
     occurrences = []
+    alignments = 0
+    comparisons = 0
     for i in range(len(t) - len(p) + 1):  # loop over alignments
+        alignments += 1
         match = True
         for j in range(len(p)):  # loop over characters
+            comparisons += 1
             if t[i+j] != p[j]:  # compare characters
                 match = False
                 break
         if match:
             occurrences.append(i)  # all chars matched; record
-    return occurrences
+    return occurrences, alignments, comparisons
 
 
 def bm_with_counts(p, p_bm, t):
