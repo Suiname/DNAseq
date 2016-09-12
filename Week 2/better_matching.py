@@ -1,6 +1,7 @@
 """Collection of string matching utilities for DNA sequences."""
 
 from bm_preproc import BoyerMoore
+from pigeonhole import Index, SubseqIndex
 
 
 def boyer_moore(p, p_bm, t):
@@ -165,6 +166,77 @@ def approximate_match(p, t, n):
         end = min((i+1)*segment_length, len(p))
         p_bm = BoyerMoore(p[start:end], alphabet='ACGT')
         matches = boyer_moore(p[start:end], p_bm, t)
+        hits = 0
+        for m in matches:
+            if m < start or m-start+len(p) > len(t):
+                continue
+            hits += 1
+            mismatches = 0
+            for j in range(0, start):
+                if p[j] != t[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n:
+                        break
+            for j in range(end, len(p)):
+                if p[j] != t[m-start+j]:
+                    mismatches += 1
+                    if mismatches > n:
+                        break
+
+            if mismatches <= n:
+                all_matches.add(m-start)
+
+    return list(all_matches), hits
+
+
+def queryIndex(p, t, index, n):
+    """Return matches allowing n mismatches."""
+    k = index.k
+    offsets = []
+    for i in index.query(p):
+        mismatches = 0
+        for j in range(len(p[k:])):
+            if p[k:][j] != t[i+k:i+len(p)][j]:
+                mismatches += 1
+            if mismatches > n:
+                break
+        if mismatches <= n:
+            offsets.append(i)
+    return offsets
+
+def query_subseq(p, t, subseq_ind):
+    """Return matches allowing n mismatches."""
+    k = subseq_ind.k
+    offsets = []
+    hits = 0
+    for i in subseq_ind.query(p):
+        mismatches = 0
+        for j in range(len(p[k:])):
+            if p[k:][j] != t[i+k:i+len(p)][j]:
+                mismatches += 1
+            if mismatches > 2:
+                break
+        if mismatches <= 2:
+            print("mismatches: ", mismatches)
+            print("index: ", i)
+            print(p[k:])
+            print(t[i+k:i+len(p)])
+            offsets.append(i)
+
+    for i in range(len(subseq_ind.index)):
+        hits += len(subseq_ind.query(p[i:]))
+    return offsets, hits
+
+
+def index_match(p, t, n):
+    """Return matches allowing n mismatches."""
+    segment_length = int(len(p) / (n+1))
+    all_matches = set()
+    for i in range(n+1):
+        start = i*segment_length
+        end = min((i+1)*segment_length, len(p))
+        p_bm = BoyerMoore(p[start:end], alphabet='ACGT')
+        matches = boyer_moore(p[start:end], p_bm, t)
 
         for m in matches:
             if m < start or m-start+len(p) > len(t):
@@ -172,16 +244,17 @@ def approximate_match(p, t, n):
 
             mismatches = 0
             for j in range(0, start):
-                if not p[j] == t[m-start+j]:
+                if p[j] != t[m-start+j]:
                     mismatches += 1
                     if mismatches > n:
                         break
             for j in range(end, len(p)):
-                if not p[j] == t[m-start+j]:
+                if p[j] != t[m-start+j]:
                     mismatches += 1
                     if mismatches > n:
                         break
 
-                if mismatches <= n:
-                    all_matches.add(m-start)
-    return list(all_matches)
+            if mismatches <= n:
+                all_matches.add(m-start)
+
+    return list(all_matches), matches
