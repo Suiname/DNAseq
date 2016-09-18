@@ -50,7 +50,6 @@ def matchDistance(x, y):
     # match distance is the smallest value in the last row of the matrix
     match = D[-1][0]
     for i in D[-1]:
-        print("Comparing match and i ", match, i)
         if i < match:
             match = i
     return match
@@ -82,3 +81,19 @@ def readFastq(filename):
             sequences.append(seq)
             qualities.append(qual)
     return sequences, qualities
+
+
+def overlap(a, b, min_length=3):
+    """ Return length of longest suffix of 'a' matching
+        a prefix of 'b' that is at least 'min_length'
+        characters long.  If no such overlap exists,
+        return 0. """
+    start = 0  # start all the way at the left
+    while True:
+        start = a.find(b[:min_length], start)  # look for b's prefix in a
+        if start == -1:  # no more occurrences to right
+            return 0
+        # found occurrence; check for full suffix/prefix match
+        if b.startswith(a[start:]):
+            return len(a)-start
+        start += 1  # move just past previous match
