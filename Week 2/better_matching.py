@@ -204,6 +204,7 @@ def queryIndex(p, t, index, n):
             offsets.append(i)
     return offsets
 
+
 def query_subseq(p, t, subseq_ind):
     """Return matches allowing n mismatches."""
     k = subseq_ind.k
