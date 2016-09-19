@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 """Week 3 homework, algorithms for assembly and overlaps"""
+from itertools import permutations
 
 
 def editDistance(x, y):
@@ -97,3 +98,13 @@ def overlap(a, b, min_length=3):
         if b.startswith(a[start:]):
             return len(a)-start
         start += 1  # move just past previous match
+
+
+def naive_overlap_map(reads, k):
+    """Return dictionary of all overlaps of length k in a set of reads."""
+    olaps = {}
+    for a, b in permutations(reads, 2):
+        olen = overlap(a, b, min_length=k)
+        if olen > 0:
+            olaps[(a, b)] = olen
+    return olaps
