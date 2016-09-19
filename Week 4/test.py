@@ -8,5 +8,6 @@ reads, qualities = readFastq('ads1_week4_reads.fq')
 genome_length = 15894
 full_genome = greedy_scs(reads, genome_length)
 print("Fully assembled genome", full_genome)
+print("Fully assembled genome length: ", len(full_genome))
 print("Number of As: ", full_genome.count("A"))
 print("Number of Ts: ", full_genome.count("T"))
