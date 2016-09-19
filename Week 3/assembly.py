@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Week 3 homework, algorithms for assembly and overlaps"""
+"""Week 3 homework, algorithms for assembly and overlaps."""
 from itertools import permutations
 
 
