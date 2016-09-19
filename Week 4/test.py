@@ -3,11 +3,20 @@
 from assembly import scs, all_scs, readFastq, greedy_scs
 strings = ['CCT', 'CTT', 'TGC', 'TGG', 'GAT', 'ATT']
 print("SCS result: ", scs(strings))
-print("SCS all result: ", all_scs(strings))
+all_scses = all_scs(strings)
+print("SCS all result: ", all_scses)
+# for ss in all_scses:
+#     print("Length of SS ", ss, ": ", len(ss))
+# strings = ['ABC', 'BCA', 'CAB']
+# print(all_scs(strings))
+
 reads, qualities = readFastq('ads1_week4_reads.fq')
 genome_length = 15894
-full_genome = greedy_scs(reads, genome_length)
+read_length = len("GTCCAGCAGAGCAAGTGATGCGAGAGCTGCCCATCCTCCAACCAGCATGCCCCTAGACATT\
+GACACTGCATCGGAGTCAGGCCAAGATCCGCAGGACAGT")
+full_genome = greedy_scs(reads, 99)
 print("Fully assembled genome", full_genome)
 print("Fully assembled genome length: ", len(full_genome))
+print("Actual assembled genome length: ", genome_length)
 print("Number of As: ", full_genome.count("A"))
 print("Number of Ts: ", full_genome.count("T"))

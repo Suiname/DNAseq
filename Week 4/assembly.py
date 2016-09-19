@@ -44,6 +44,7 @@ def scs(ss):
 def all_scs(ss):
     """Return all shortest common superstrings."""
     shortest_sup = None
+    all_short_sups = []
     for ssperm in itertools.permutations(ss):
         sup = ssperm[0]  # superstring starts as first string
         for i in range(len(ss)-1):
@@ -52,11 +53,17 @@ def all_scs(ss):
             # add non-overlapping portion of B to superstring
             sup += ssperm[i+1][olen:]
         if shortest_sup is None or len(sup) <= len(shortest_sup):
-            if shortest_sup is not None:
-                shortest_sup.append(sup)
-            else:
-                shortest_sup = [sup]
-    return shortest_sup  # return shortest
+            shortest_sup = sup  # found shorter superstring
+            all_short_sups.append(sup)
+    length = len(all_short_sups[0])
+    for sup in all_short_sups:
+        if len(sup) < length:
+            length = len(sup)
+    results = []
+    for sup in all_short_sups:
+        if len(sup) == length:
+            results.append(sup)
+    return results  # return shortest
 
 
 def pick_maximal_overlap(reads, k):
