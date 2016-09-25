@@ -6,6 +6,7 @@ Using DeBruijn and shortest common superstring.
 """
 
 import itertools
+from collections import defaultdict
 
 
 def overlap(a, b, min_length=3):
@@ -115,3 +116,25 @@ def readFastq(filename):
             sequences.append(seq)
             qualities.append(qual)
     return sequences, qualities
+
+
+def dykSuperstring(originalSeqs):
+    """Dyskstra super string algorithm."""
+    paths = defaultdict(set)
+    paths[0] = {''}
+    while paths:
+        minLength = min(paths.keys())
+        while paths[minLength]:
+            candidate = paths[minLength].pop()
+            seqAdded = False
+            for seq in originalSeqs:
+                if seq in candidate:
+                    continue
+                seqAdded = True
+                for i in reversed(range(len(seq)+1)):
+                    if candidate.endswith(seq[:i]):
+                        newCandidate = candidate + seq[i:]
+                        paths[len(newCandidate)].add(newCandidate)
+            if not seqAdded:  # nothing added, so all present?
+                return candidate
+        del paths[minLength]
