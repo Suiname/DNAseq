@@ -12,9 +12,8 @@ print("SCS all result: ", all_scses)
 
 reads, qualities = readFastq('ads1_week4_reads.fq')
 genome_length = 15894
-read_length = len("GTCCAGCAGAGCAAGTGATGCGAGAGCTGCCCATCCTCCAACCAGCATGCCCCTAGACATT\
-GACACTGCATCGGAGTCAGGCCAAGATCCGCAGGACAGT")
-full_genome = greedy_scs(reads, 2)
+for k in range(100, 1, -1):
+    full_genome = greedy_scs(reads, k)
 print("Fully assembled genome", full_genome)
 print("Fully assembled genome length: ", len(full_genome))
 print("Actual assembled genome length: ", genome_length)

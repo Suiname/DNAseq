@@ -68,14 +68,26 @@ def all_scs(ss):
 
 
 def pick_maximal_overlap(reads, k):
-    """Return maximal overlap of length k in a given set of reads."""
+    """ Return a pair of reads from the list with a
+        maximal suffix/prefix overlap >= k.  Returns
+        overlap length 0 if there are no such overlaps."""
     reada, readb = None, None
     best_olen = 0
-    for a, b in itertools.permutations(reads, 2):
-        olen = overlap(a, b, min_length=k)
-        if olen > best_olen:
-            reada, readb = a, b
-            best_olen = olen
+
+    # Make index
+    index = defaultdict(set)
+    for read in reads:
+        for i in range(len(read) - k + 1):
+            index[read[i:i+k]].add(read)
+
+    for r in reads:
+        for o in index[r[-k:]]:
+            if r != o:
+                olen = overlap(r, o, k)
+                if olen > best_olen:
+                    reada, readb = r, o
+                    best_olen = olen
+
     return reada, readb, best_olen
 
 
@@ -116,25 +128,3 @@ def readFastq(filename):
             sequences.append(seq)
             qualities.append(qual)
     return sequences, qualities
-
-
-def dykSuperstring(originalSeqs):
-    """Dyskstra super string algorithm."""
-    paths = defaultdict(set)
-    paths[0] = {''}
-    while paths:
-        minLength = min(paths.keys())
-        while paths[minLength]:
-            candidate = paths[minLength].pop()
-            seqAdded = False
-            for seq in originalSeqs:
-                if seq in candidate:
-                    continue
-                seqAdded = True
-                for i in reversed(range(len(seq)+1)):
-                    if candidate.endswith(seq[:i]):
-                        newCandidate = candidate + seq[i:]
-                        paths[len(newCandidate)].add(newCandidate)
-            if not seqAdded:  # nothing added, so all present?
-                return candidate
-        del paths[minLength]
