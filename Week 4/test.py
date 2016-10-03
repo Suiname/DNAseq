@@ -3,13 +3,9 @@
 from assembly import scs, all_scs, readFastq, greedy_scs
 strings = ['CCT', 'CTT', 'TGC', 'TGG', 'GAT', 'ATT']
 print("SCS result: ", scs(strings))
+print("SCS length: ", len(scs(strings)))
 all_scses = all_scs(strings)
 print("SCS all result: ", all_scses)
-# for ss in all_scses:
-#     print("Length of SS ", ss, ": ", len(ss))
-# strings = ['ABC', 'BCA', 'CAB']
-# print(all_scs(strings))
-
 reads, qualities = readFastq('ads1_week4_reads.fq')
 genome_length = 15894
 for k in range(100, 1, -1):
